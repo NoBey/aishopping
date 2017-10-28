@@ -4,15 +4,15 @@
     <div class="main">
       <div class="main_content">
         <p><router-link  :to="{name: 'Index'}">Accueil</router-link>/
-          <router-link :to="{name: 'Index'}">商城</router-link>/
+          <router-link :to="{name: 'Mall'}">商城</router-link>/
           TAPIS</p>
       </div>
       <div class="row items">
         <div class="col-sm-6">
-          <img :src="shop.image" alt="" width="100%" height="330">
+          <img :src="mainsrc" alt="" width="100%" height="330">
           <ul>
-            <li class="item" v-for="gallery in shop.galleries">
-              <img :src="gallery.image" alt="" width="50" height="50">
+            <li class="item" v-for="gallery in shop.galleries" >
+              <img :src="gallery.image" alt="" width="50" height="50" @click="toggleSrc(gallery.image)">
             </li>
           </ul>
           <p>Résumé de l'article. Décrivez votre article à vos clients afin d'en donner un aperçu avant l'achat.</p>
@@ -45,7 +45,8 @@
     data () {
       return {
         id: this.$route.query.id,
-        shop: {}
+        shop: {},
+        mainsrc: ''
       }
     },
     components: {
@@ -61,7 +62,14 @@
           .then(res => {
             console.log(res)
             this.shop = res.data
+            this.mainsrc = res.data.image
           })
+      },
+      toggleSrc (src) {
+        console.log(src)
+        console.log(this.mainsrc)
+        this.mainsrc = src
+        console.log(this.mainsrc)
       }
     }
   }

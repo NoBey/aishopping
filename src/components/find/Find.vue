@@ -1,28 +1,18 @@
 <template>
   <div class="find">
     <navigation></navigation>
+    <notice></notice>
     <div class="main">
-      <div class="notice">
-        <div class="notice-content">
-          <h4>独家折扣</h4>
-          <p>下载爱shopping APP，享受妒忌折扣信息，提前退税，扫码积分换取好礼，更有优惠，路线信息请下载爱shopping APP。</p>
-        </div>
-      </div>
       <div class="cart">
         <h4>
           <span>所有发现</span>
-          <span>美食</span>
-          <span>购物</span>
-          <span>旅游</span>
-          <span>文化</span>
-          <span>社会</span>
-          <span>Tips</span>
+          <span v-for="item in categories" @click="toCate(item.id)">{{item.name}}</span>
         </h4>
       </div>
       <div  class="content">
         <div class="container">
-          <div class="find-wrap">
-            <div class='find-li'  v-for="discover in discovers" @click="toDetail(discover.id)">
+          <div class="row">
+            <div class="col-sm-4" v-for="discover in discovers" @click="toDetail(discover.id)">
               <div class="img_wrapper">
                 <img :src="discover.thumbnail" alt="">
               </div>
@@ -50,36 +40,55 @@
 <script>
   import API from '@/api'
   import Navigation from '../layout/Navigation'
+  import Notice from '../layout/Notice'
   import Foot from '../layout/Foot'
 
   export default {
     data () {
       return {
         discovers: [],
+        categories: [],
         page: 1,
         morebtn: true
       }
     },
     components: {
       Navigation,
+      Notice,
       Foot
     },
     created () {
-      this.getDiscovers()
+      this.getDiscovers(this.page)
+      this.getCategories()
     },
     methods: {
       toDetail (id) {
         this.$router.push({name: 'FindDetail', query: {id: id}})
       },
+      toCate (id) {
+        this.getCategoriesId(id)
+      },
       getDiscovers (page) {
         API.getDiscovers(page)
         .then(res => {
-          if (res.data.data.length <= 0) {
+          if (res.data.current_page === res.data.last_page) {
             this.morebtn = false
           }
           this.discovers.push(...res.data.data)
           this.refreshPage()
         })
+      },
+      getCategories () {
+        API.getCategories()
+          .then(res => {
+            this.categories.push(...res.data)
+          })
+      },
+      getCategoriesId (id) {
+        API.getCategoriesId(id)
+          .then(res => {
+            console.log(res)
+          })
       },
       // 加载更多
       loadMore () {
@@ -100,25 +109,6 @@
     .main{
       margin-top:108px;
       width:100%;
-      .notice{
-        width:100%;
-        background:#F8786B;
-        .notice-content{
-          width:80%;
-          margin:0 auto;
-          color:#fff;
-          h4{
-            font-size:1.05rem;
-            font-weight: 500;
-            padding-top:1.3rem;
-            margin-bottom:1.1rem;
-          }
-          p{
-            font-size:.9rem;
-            padding-bottom: 1rem;
-          }
-        }
-      }
       .cart{
         width:100%;
         h4{
@@ -128,8 +118,12 @@
           font-size:1rem;
           span{
             display: inline-block;
+            cursor:pointer;
             padding:5px 0;
             margin-right:3.5rem;
+            &:hover{
+              color:#F8786B;
+            }
           }
         }
       }
@@ -144,11 +138,11 @@
             position:relative;
             margin-bottom:1rem;
             .img_wrapper{
-              width:310px;
+              width:100%;
               height: 460px;
               overflow: hidden;
               img{
-                width:310px;
+                width:100%;
                 height: 460px;
                 transition: all .3s;
               }
@@ -158,7 +152,7 @@
               position:absolute;
               bottom:1rem;
               left:50%;
-              /*padding:1.9rem 1rem;*/
+              padding:1.9rem 1rem;
               width:260px;
               transform: translateX(-50%);
               background:#fff;
@@ -196,23 +190,6 @@
 
       }
 
-    }
-  }
-  .find-wrap{
-    display: flex;
-    justify-content: center;
-
-
-  }
-  .find-li{
-  width: 30%;
-  img{
-    width:310px;
-    height: 460px;
-    transition: all .3s;
-  }
-   .item-content{
-    position:absolute;
     }
   }
   .load-more {

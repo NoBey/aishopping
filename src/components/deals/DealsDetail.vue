@@ -1,45 +1,21 @@
 <template>
   <div class="dealdetail">
     <navigation></navigation>
-    <header>
-      <h1>Galeries Lafayette 冬季特别礼遇</h1>
-      <p>Galeries Lafayette是一个值得信赖的品牌，典雅尊贵，是身份的象征，您值得拥有！</p>
-    </header>
+    <div class="notice">
+      <div class="notice-content">
+        <h4>独家折扣</h4>
+        <p>下载爱shopping APP，享受妒忌折扣信息，提前退税，扫码积分换取好礼，更有优惠，路线信息请下载爱shopping APP。</p>
+      </div>
+    </div>
     <div class="main">
-      <ul class="items">
-        <li>
-          <div class="img_wrapper_0">
-            <div class="descript">APERÇU RAPIDE</div>
-            <span class="special">热门推荐</span>
-          </div>
-          <h3> TAPIS </h3>
-          <span class="price"> €89.00 </span>
-        </li>
-        <li>
-          <div class="img_wrapper_1">
-            <div class="descript">APERÇU RAPIDE</div>
-          </div>
-          <h3> TAPIS </h3>
-          <span class="price"> €89.00 </span>
-        </li>
-        <li>
-          <div class="img_wrapper_2">
-            <div class="descript">APERÇU RAPIDE</div>
-          </div>
-          <h3> TAPIS </h3>
-          <span class="price"> €89.00 </span>
-        </li>
-        <li class="last">
-          <div class="img_wrapper_3">
-            <div class="descript">APERÇU RAPIDE</div>
-          </div>
-          <h3> TAPIS </h3>
-          <span class="price"> €89.00 </span>
-        </li>
-      </ul>
-      <ul>
-        <li v-for=" item in  this.deal">{{item.name}}</li>
-      </ul>
+      <div class="deal-item">
+        <img :src="deal.image" width="100%" height="230">
+        <h4>{{deal.name}}</h4>
+        <h6>{{deal.description}}</h6>
+        <p><span>发表时间：{{deal.created_at}}</span> <span>更新时间：{{deal.updated_at}}</span><span>分享数：{{deal.enable}}</span></p>
+      </div>
+      <div class="content" v-html="deal.content">
+      </div>
     </div>
     <foot></foot>
   </div>
@@ -68,7 +44,8 @@
         API.getDeal(id)
           .then(res => {
             console.log(res)
-            this.deal = res.data.data
+            this.deal = res.data
+            console.log(this.deal)
           })
       }
     }
@@ -77,97 +54,65 @@
 <style scope lang="less">
   .dealdetail{
     width:100%;
-    header{
-      width:100%;
-      height:108px;
-      background:rgba(233,244,255,.8);
+    .notice{
       margin-top:108px;
-      h1{
-        width:980px;
+      width:100%;
+      background:#F8786B;
+      .notice-content{
+        width:80%;
         margin:0 auto;
-        height:65px;
-        line-height: 65px;
-        text-align: center;
-        color:#f50;
-        font-weight:500;
-      }
-      p{
-        width:980px;
-        margin:0 auto;
-        font-size: .8rem;
-        text-align:right;
+        color:#fff;
+        padding-bottom: 1rem;
+        h4{
+          font-size:1.05rem;
+          font-weight: 500;
+          padding-top:1.3rem;
+          margin-bottom:1.1rem;
+        }
+        p{
+          font-size:.9rem;
+        }
       }
     }
     .main{
+      margin-top:10px;
       width:100%;
-      ul.items {
-        padding:0;
-        list-style: none;
-        width:1066px;
+      .deal-item{
+        width:80%;
         margin:0 auto;
-        overflow: hidden;
-        margin-bottom: 2rem;
-        li{
-          float:left;
-          margin-right:22px;
+        text-align: center;
+        h4{
+          padding:15px 0;
+        }
+      }
+      .cart{
+        width:100%;
+        .author {
+          width: 80%;
+          margin: 2rem auto;
+          color: #333;
+          font-size: 1rem;
           position: relative;
-          &.last{
-            margin-right: 0;
+          h6 {
+            font-weight: 200;
           }
-          .img_wrapper_0,.img_wrapper_1,.img_wrapper_2,.img_wrapper_3{
-            position: relative;
-            width:250px;
-            height: 250px;
-            background: url("../mall/img/mall_01.png")no-repeat center center;
-            .descript{
-              width:100%;
-              height:50px;
-              line-height:50px;
-              background: rgba(255, 255, 255, 0.75);
-              position: absolute;
-              bottom:0;
-              text-align: center;
-              display: none;
-            }
-            .special{
-              display: block;
-              color:#fff;
-              font-size:.8rem;
-              padding:10px 15px;
-              position: absolute;
-              top:0;
-              left:0;
-              background:rgba(230,0,0,.8);
-            }
-          }
-          .img_wrapper_1{
-            background: url("../mall/img/mall_02.png")no-repeat center center;
-          }
-          .img_wrapper_2{
-            background: url("../mall/img/mall_01.png")no-repeat center center;
-          }
-          .img_wrapper_3{
-            background: url("../mall/img/mall_02.png")no-repeat center center;
-          }
-          &:hover{
-            .img_wrapper_0,.img_wrapper_3,.img_wrapper_2,.img_wrapper_1 {
-              background-size: 120%;
-              transition:  all .3s;
-              .descript{
-                display: block;
-                transition: all .3s;
-              }
-            }
-          }
-          h3{
-            color:#c9c9c9;
-            font-size: 1.2rem;
-            font-weight: 400;
-            padding-top:1rem;
-          }
-          span{
+          p {
             font-size: .8rem;
+            color: #ccc;
+            span {
+              display: inline-block;
+              margin-right: 2rem;
+            }
           }
+        }
+      }
+      .content {
+        width:80%;
+        margin: 2rem auto;
+        p {
+          line-height: 1.4rem;
+          text-indent: 2rem;
+          word-spacing: .3rem;
         }
       }
     }

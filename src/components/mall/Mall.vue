@@ -55,10 +55,10 @@
       getShops (page) {
         API.getShops(page)
           .then(res => {
-            console.log(res)
-            if (res.data.data.length <= 0) {
+            if (res.data.current_page === res.data.last_page) {
               this.morebtn = false
             }
+            console.log(res.data)
             this.shops.push(...res.data.data)
             this.refreshPage()
           })

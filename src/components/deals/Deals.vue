@@ -2,25 +2,20 @@
   <div class="deals">
     <navigation></navigation>
     <div class="main">
-      <div class="header"></div>
-      <div class="notice">
-        <div class="notice-content">
-          <h4>独家折扣</h4>
-          <p>下载爱shopping APP，享受妒忌折扣信息，提前退税，扫码积分换取好礼，更有优惠，路线信息请下载爱shopping APP。</p>
-        </div>
-      </div>
-      <div class="cart-warp">
-        <div class="cart1" v-for="deal in deals">
-          <img :src="deal.image" alt="" class="img_wrapper">
-          <div class="cart-content">
-            <h1>Galeries Lafayette 春季特别礼遇</h1>
-            <p class="header-d">独家折扣 提前退税</p>
-            <p class="more_w" @click="toDetail(deal.id)">详细信息<br/><span class="more">更多</span>
-            </p>
+      <notice></notice>
+      <div class="cart" >
+        <div class="row cart-content">
+          <div class="col-sm-4" v-for="deal in deals" :key="deal.id" @click="toDetail(deal.id)">
+            <div class="deal">
+              <img :src="deal.image" class="img_wrapper">
+              <div class="deal-content">
+                <h3>{{deal.name}}</h3>
+                <p>{{deal.description}}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
       <div v-if="morebtn" class="row">
         <div class="col-sm-12">
           <div class="load-more" @click="loadMore">
@@ -35,6 +30,7 @@
 <script>
   import API from '@/api'
   import Navigation from '../layout/Navigation'
+  import Notice from '../layout/Notice'
   import Foot from '../layout/Foot'
 
   export default {
@@ -47,6 +43,7 @@
     },
     components: {
       Navigation,
+      Notice,
       Foot
     },
     created () {
@@ -56,15 +53,14 @@
       toDetail (id) {
         this.$router.push({name: 'DealsDetail', query: {id: id}})
       },
-      getDeals (page) {
-        API.getDeals(page)
-          .then(res => {
-            if (res.data.data.length <= 0) {
-              this.morebtn = false
-            }
-            this.deals.push(...res.data.data)
-            this.refreshPage()
-          })
+      async getDeals (page) {
+        let res = await API.getDeals(page)
+        console.log(res)
+        this.deals.push(...res.data.data)
+        if( res.data.current_page == res.data.last_page) {
+          this.morebtn = false
+        }
+        this.refreshPage()
       },
       // 加载更多
       loadMore () {
@@ -72,7 +68,7 @@
       },
       // 更新分页
       refreshPage () {
-        this.page += 1
+        this.page++
       }
     }
   }
@@ -85,97 +81,60 @@
     .main{
       width:100%;
       margin:0 auto;
-      .header{
-        height:108px;
-        background: #fff;
-        position: relative;
-      }
-      .notice{
+      .cart{
         width:100%;
-        background:#F8786B;
-        .notice-content{
-          width:80%;
-          margin:0 auto;
-          color:#fff;
-          padding-bottom: 1rem;
-          h4{
-            font-size:1.05rem;
-            font-weight: 500;
-            padding-top:1.3rem;
-            margin-bottom:1.1rem;
-          }
-          p{
-            font-size:.9rem;
-          }
-        }
-      }
-      .cart1{
-        width:100%;
-        position:relative;
         color:#fff;
-        height: 620px;
-        margin:10px;
-        max-width: 300px;
-        background-color: #d5d5d5;
-        .img_wrapper{
+        position: relative;
+        .cart-content{
+          width:80%;
+          margin:15px auto;
+        }
+        .col-sm-4{
+          padding-top: 20px;
+          padding-bottom: 20px;
+        }
+        .deal{
+          padding:0;
           width:100%;
           height:100%;
-          display: block;
-        }
-        .cart-content{
-          position: absolute;
-          z-index:3;
-          top:0;
-          text-align: center;
-          left:50%;
-          transform: translateX(-50%);
-          h1{
-            margin-top:8rem;
+          overflow: hidden;
+          position: relative;
+          cursor: pointer;
+          .img_wrapper{
+            width:100%;
+            height:auto;
+            display: block;
+            transition: all .3s;
           }
-          p.header-d{
-
+          .deal-content{
+            width:100%;
+            height:100%;
+            position: absolute;
+            top:50%;
+            transform: translateY(-50%);
             text-align: center;
-            font-size: 1.5rem;
-          }
-          .more_w{
-            line-height: 2rem;
-            font-size:1.5rem;
-            text-align: center;
-            text-decoration: none;
-            color:#fff;
-            margin-top:10rem;
-            cursor:pointer;
-            span.more{
-              display: block;
-              font-size:0;
-              margin-top:1rem;
-              position: relative;
-              &:after{
-                content:'';
-                width:1rem;
-                height:2px;
-                background: #fff;
-                position: absolute;
-                top:0;
-                left:50%;
-                margin-left:-0.5rem;
-                transform:rotate(-45deg);
-              }
-              &:before{
-                content:'';
-                width:1rem;
-                height:2px;
-                background: #fff;
-                position: absolute;
-                top:0;
-                left:50%;
-                margin-left:-1.1rem;
-                transform:rotate(45deg);
-              }
+            background: rgba(235,129,124,.8);
+            display: none;
+            h3{
+              margin-top:60px;
             }
-
+            p{
+              margin-top:45px;
+              width:80%;
+              margin:0 auto;
+            }
+          }
+          &:hover{
+            .deal-content{
+              display: block;
+            }
+            .img_wrapper{
+              // width:120%;
+              // height:120%;
+            }
           }
         }
+
       }
     }
   }
@@ -187,12 +146,5 @@
     padding: 15px;
     color: #999;
     cursor: pointer;
-  }
-
-  .cart-warp{
-    display: flex;
-    justify-content: center;
-
-
   }
 </style>

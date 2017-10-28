@@ -1,14 +1,8 @@
 <template>
   <div class="deals">
     <navigation></navigation>
+    <notice></notice>
     <div class="main">
-      <div class="header"></div>
-      <div class="notice">
-        <div class="notice-content">
-          <h4>独家折扣</h4>
-          <p>下载爱shopping APP，享受妒忌折扣信息，提前退税，扫码积分换取好礼，更有优惠，路线信息请下载爱shopping APP。</p>
-        </div>
-      </div>
       <div class="cart" v-for="route in routes">
         <img :src="route.image" alt="" class="img_wrapper">
         <div class="cart-content">
@@ -32,6 +26,7 @@
 <script>
   import API from '@/api'
   import Navigation from '../layout/Navigation'
+  import Notice from '../layout/Notice'
   import Foot from '../layout/Foot'
 
   export default {
@@ -44,6 +39,7 @@
     },
     components: {
       Navigation,
+      Notice,
       Foot
     },
     created () {
@@ -57,7 +53,7 @@
         API.getNavigos(page)
           .then(res => {
             console.log(res)
-            if (res.data.data.length <= 0) {
+            if (res.data.current_page === res.data.last_page) {
               this.morebtn = false
             }
             this.routes.push(...res.data.data)
@@ -83,30 +79,6 @@
     .main{
       width:100%;
       margin:0 auto;
-      .header{
-        height:108px;
-        background: #fff;
-        position: relative;
-      }
-      .notice{
-        width:100%;
-        background:#F8786B;
-        .notice-content{
-          width:80%;
-          margin:0 auto;
-          color:#fff;
-          padding-bottom: 1rem;
-          h4{
-            font-size:1.05rem;
-            font-weight: 500;
-            padding-top:1.3rem;
-            margin-bottom:1.1rem;
-          }
-          p{
-            font-size:.9rem;
-          }
-        }
-      }
       .cart{
         width:100%;
         position:relative;

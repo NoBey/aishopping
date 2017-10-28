@@ -7,15 +7,20 @@
 </template>
 
 <script>
-  // import API from '@/api'
+  import API from '@/api'
   export default {
     data () {
       return {
+        banner: []
       }
     },
     created () {
+      this.getCarousel()
     },
     methods: {
+      getCarousel () {
+        API.getCarousel()
+      }
     },
     components: {
     }
