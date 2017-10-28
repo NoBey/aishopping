@@ -10,8 +10,8 @@ import FindDetail from '@/components/find/FindDetail'
 import Deals from '@/components/deals/Deals'
 import DealsDetail from '@/components/deals/DealsDetail'
 
-import Navigo from '@/components/navigo/Navigo'
-import NavigoDetail from '@/components/navigo/NavigoDetail'
+import Itineraries from '@/components/itineraries/Itineraries'
+import ItinerariesDetail from '@/components/itineraries/ItinerariesDetail'
 
 import Product from '@/components/shop/Product'
 import ProductDetail from '@/components/shop/ProductDetail'
@@ -58,14 +58,14 @@ const router = new Router({
       component: DealsDetail
     },
     {
-      path: '/navigo',
-      name: 'Navigo',
-      component: Navigo
+      path: '/itineraries',
+      name: 'Itineraries',
+      component: Itineraries
     },
     {
-      path: '/navigo/detail',
-      name: 'NavigoDetail',
-      component: NavigoDetail
+      path: '/itineraries/detail',
+      name: 'ItinerariesDetail',
+      component: ItinerariesDetail
     },
     {
       path: '/product',

@@ -37,11 +37,8 @@ export default {
   getShop (id) {
     return request.get('products/' + id)
   },
-  getItineraries () {
-    return request.get('itineraries')
-  },
-  getItinerary (id) {
-    return request.get('itineraries/' + id)
+  getItineraries (page) {
+    return request.get('itineraries?page=' + page)
   },
   getCategories () {
     return request.get('categories')

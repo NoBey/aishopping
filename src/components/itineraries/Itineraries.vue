@@ -1,16 +1,16 @@
 <template>
-  <div class="deals">
+  <div class="itineraries">
     <navigation></navigation>
     <div class="main">
       <notice></notice>
       <div class="cart" >
         <div class="row cart-content">
-          <div class="col-sm-4" v-for="deal in deals" :key="deal.id" @click="toDetail(deal.id)">
-            <div class="deal">
-              <img :src="deal.image" class="img_wrapper">
-              <div class="deal-content">
-                <h3>{{deal.name}}</h3>
-                <p>{{deal.description}}</p>
+          <div class="col-sm-4" v-for="item in itineraries" :key="item.id" @click="toDetail(item.id)">
+            <div class="itineraries">
+              <img :src="item.image" class="img_wrapper">
+              <div class="itineraries-content">
+                <h3>{{item.name}}</h3>
+                <p>{{item.description}}</p>
               </div>
             </div>
           </div>
@@ -27,6 +27,7 @@
     <foot></foot>
   </div>
 </template>
+
 <script>
   import API from '@/api'
   import Navigation from '../layout/Navigation'
@@ -36,7 +37,7 @@
   export default {
     data () {
       return {
-        deals: [],
+        itineraries: [],
         page: 1,
         morebtn: true
       }
@@ -47,16 +48,16 @@
       Foot
     },
     created () {
-      this.getDeals(this.page)
+      this.getItineraries(this.page)
     },
     methods: {
       toDetail (id) {
-        this.$router.push({name: 'DealsDetail', query: {id: id}})
+        this.$router.push({name: 'ItinerariesDetail', query: {id: id}})
       },
-      async getDeals (page) {
+      async getItineraries (page) {
         let res = await API.getDeals(page)
         console.log(res)
-        this.deals.push(...res.data.data)
+        this.itineraries.push(...res.data.data)
         if( res.data.current_page == res.data.last_page) {
           this.morebtn = false
         }
@@ -64,18 +65,18 @@
       },
       // 加载更多
       loadMore () {
-        this.getDeals(this.page)
+        this.getItineraries(this.page)
       },
       // 更新分页
       refreshPage () {
-        this.page++
+        this.page += 1
       }
     }
   }
 </script>
 
 <style scope lang="less">
-  .deals{
+  .itineraries{
     height:100%;
     box-size:border-box;
     width:100%;
@@ -94,7 +95,7 @@
           padding-top: 20px;
           padding-bottom: 20px;
         }
-        .deal{
+        .itineraries{
           padding:0;
           width:100%;
           height:100%;
@@ -107,7 +108,7 @@
             display: block;
             transition: all .3s;
           }
-          .deal-content{
+          .itineraries-content{
             width:100%;
             height:100%;
             position: absolute;

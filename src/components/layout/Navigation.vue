@@ -18,7 +18,7 @@
             <router-link :to="{name:'Brands'}">品牌</router-link>
           </li>
           <li>
-            <router-link :to="{name:'Navigo'}">路线</router-link>
+            <router-link :to="{name:'Itineraries'}">路线</router-link>
           </li>
           <li>
             <router-link :to="{name:'Deals'}">福利</router-link>
@@ -40,7 +40,7 @@
           <router-link :to="{name:'Brands'}">Brand</router-link>
         </li>
         <li>
-          <router-link :to="{name:'Navigo'}">Itinerary</router-link>
+          <router-link :to="{name:'Itineraries'}">Itinerary</router-link>
         </li>
         <li>
           <router-link :to="{name:'Deals'}">Good Deal</router-link>
