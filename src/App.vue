@@ -30,6 +30,7 @@ export default {
 </script>
 
 <style lang="less">
+@import "../node_modules/leaflet/dist/leaflet.css";
 /*
  *  过渡效果
  */

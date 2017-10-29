@@ -9,26 +9,23 @@
             <div class="deal">
               <img :src="deal.image" class="img_wrapper">
               <div class="deal-content">
-                <h3>{{deal.name}}</h3>
-                <p>{{deal.description}}</p>
+                <div class="vertical-center">
+                  <h3>{{deal.name}}</h3>
+                  <p>{{deal.description}}</p>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div v-if="morebtn" class="row cart-content">
-          <div class="col-sm-12 col-md-offset-1">
-            <div class="load-more" @click="loadMore">
-              加载更多
             </div>
           </div>
         </div>
       </div>
     </div>
+    <p v-if="isBottom" class="is-bottom">到底了</p>
     <foot></foot>
   </div>
 </template>
 <script>
   import API from '@/api'
+  import bottomHeight from '@/util/bottomHeight'
   import Navigation from '../layout/Navigation'
   import Notice from '../layout/Notice'
   import Foot from '../layout/Foot'
@@ -38,13 +35,26 @@
       return {
         deals: [],
         page: 1,
-        morebtn: true
+        isBottom: false,
+        //保证window.onscroll在bottomHeight() < 120时，不会重复调用this.getDeals(this.page)
+        one:false
       }
     },
     components: {
       Navigation,
       Notice,
       Foot
+    },
+    mounted (){
+      window.onscroll = async() => {
+        // console.log(bottomHeight())
+        if( bottomHeight() < 120 ){
+          if( !this.one ) return
+          this.one = false
+          console.log(2)
+          await this.getDeals(this.page)
+        }
+      }
     },
     created () {
       this.getDeals(this.page)
@@ -54,17 +64,18 @@
         this.$router.push({name: 'DealsDetail', query: {id: id}})
       },
       async getDeals (page) {
+        if( this.isBottom == true ) return
         let res = await API.getDeals(page)
         console.log(res)
         this.deals.push(...res.data.data)
         if( res.data.current_page == res.data.last_page) {
-          this.morebtn = false
+          this.isBottom = true
+          //清除滚动事件监听
+          window.onscroll = null
         }
         this.refreshPage()
-      },
-      // 加载更多
-      loadMore () {
-        this.getDeals(this.page)
+        //当此加载事件完毕
+        this.one = true
       },
       // 更新分页
       refreshPage () {
@@ -91,8 +102,7 @@
           margin:15px auto;
         }
         .col-sm-4{
-          padding-top: 20px;
-          padding-bottom: 20px;
+          padding: 10px;
         }
         .deal{
           padding:0;
@@ -106,6 +116,7 @@
             height:auto;
             display: block;
             transition: all .3s;
+            border: none;
           }
           .deal-content{
             width:100%;
@@ -116,36 +127,52 @@
             text-align: center;
             background: rgba(235,129,124,.8);
             display: none;
-            h3{
-              margin-top:60px;
-            }
-            p{
-              margin-top:45px;
-              width:80%;
-              margin:0 auto;
+            .vertical-center{
+            position:absolute;
+            width: 100%;
+            left:50%;    
+            top:50%;
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            -moz-transform: translateX(-50%) translateY(-50%);
+            -ms-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
+              h3{
+                padding: 0 5%;
+                line-height: 2rem;
+                font-size: 1.1rem;
+              }
+              p{
+                width:80%;
+                margin:0 auto;
+                font-size:1rem;
+                line-height: 1.6rem;
+                margin-bottom: 2rem;
+                word-wrap:break-word;
+                color: #fff;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 4;
+                overflow: hidden;
+              }
             }
           }
           &:hover{
             .deal-content{
               display: block;
+              background: rgba(242,177,171,.8);
             }
             .img_wrapper{
-              // width:120%;
-              // height:120%;
+              transform: scale(1.2);
             }
           }
         }
-
       }
     }
   }
-  .load-more {
+  .is-bottom {
     text-align: center;
-    border: 1px solid #999;
-    border-radius: 5px;
     margin: 15px 0;
     padding: 15px;
     color: #999;
-    cursor: pointer;
   }
 </style>

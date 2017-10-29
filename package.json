@@ -25,6 +25,7 @@
     "vue-preview": "^1.0.5",
     "vue-router": "^2.6.0",
     "vue-tab": "0.0.0",
+    "vue2-leaflet": "0.0.55",
     "vuex": "^2.3.1"
   },
   "devDependencies": {

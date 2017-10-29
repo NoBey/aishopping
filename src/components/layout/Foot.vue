@@ -10,9 +10,15 @@
                 kai@aishoppingparis.com
             </p>
             <p>
-              <img  src="./img/facebook.png" alt="facebooke.png" width="22" height="22">
-              <img src="./img/fly.png" alt="fly.png" width="22" height="22">
-              <img src="./img/contactus.png" alt="contactus.png" width="22" height="22">
+              <a href="https://www.facebook.com/">
+                <img  src="./img/facebook.png" alt="facebooke.png" width="22" height="22">
+              </a>
+              <a href="https://twitter.com/">
+                <img src="./img/fly.png" alt="fly.png" width="22" height="22">
+              </a>
+              <a href="https://www.pinterest.com/">
+                <img src="./img/contactus.png" alt="contactus.png" width="22" height="22">
+              </a>
             </p>
           </div>
           <div class="col-sm-3">

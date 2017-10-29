@@ -3,7 +3,8 @@
     <swiper :options="swiperOption">
       <swiper-slide v-for="(slide,index) in swiperSlides" :key="index">
         <a :href="slide.link">
-          <img :src="'http://ec2-52-18-155-175.eu-west-1.compute.amazonaws.com/' + slide.image" :alt="slide.name">
+          <!-- <img :src="'http://ec2-52-18-155-175.eu-west-1.compute.amazonaws.com/' + slide.image" :alt="slide.name"> -->
+          <img :src="slide.image" :alt="slide.name">
         </a>
       </swiper-slide>
       <div class="swiper-pagination" slot="pagination"></div>
