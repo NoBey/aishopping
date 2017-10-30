@@ -6,15 +6,15 @@
       <div class="cart">
         <h4>
           <span>所有发现</span>
-          <span v-for="item in categories" @click="toCate(item.id)">{{item.name}}</span>
+          <span v-for="tag in tags" :key="tag" @click="discoversByTag(tag)">{{tag}}</span>
         </h4>
       </div>
       <div  class="content">
         <div class="container">
           <div class="row">
-            <div class="col-sm-4" v-for="discover in discovers" @click="toDetail(discover.id)">
+            <div class="col-sm-4" v-for="discover in discovers" :key="discover.id" @click="toDetail(discover.id)">
               <div class="img_wrapper">
-                <img :src="discover.thumbnail" alt="">
+                <img :src="discovers.thumbnail" alt="">
               </div>
               <div class="item-content">
                 <h5>{{ discover.name }}</h5>
@@ -24,16 +24,10 @@
               </div>
             </div>
           </div>
-          <div class="row" v-if="morebtn">
-            <div class="col-sm-12">
-              <div class="load-more" @click="loadMore">
-                加载更多
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
+    <p v-if="isBottom" class="is-bottom">到底了</p>
     <foot></foot>
   </div>
 </template>
@@ -46,10 +40,12 @@
   export default {
     data () {
       return {
+        discoversShow:[],
         discovers: [],
-        categories: [],
+        tags: {},
         page: 1,
-        morebtn: true
+        isBottom: false,
+        one:false
       }
     },
     components: {
@@ -59,44 +55,51 @@
     },
     created () {
       this.getDiscovers(this.page)
-      this.getCategories()
+    },
+    mounted (){
+      window.onscroll = () => {
+        // console.log(bottomHeight())
+        if( bottomHeight() < 120 ){
+          if( !this.one ) return
+          this.one = false
+          this.getDiscovers(this.page)
+        }
+      }
     },
     methods: {
       toDetail (id) {
         this.$router.push({name: 'FindDetail', query: {id: id}})
       },
-      toCate (id) {
-        this.getCategoriesId(id)
+      async getDiscovers (page) {
+        let res = await API.getDiscovers(page)
+        console.log(res)
+        this.discovers.push(...res.data.data)
+        if( res.data.current_page == res.data.last_page) {
+          this.isBottom = true
+          //清除滚动事件监听
+          window.onscroll = null
+        }
+        this.refreshPage()
+        //当此加载事件完毕
+        this.one = true
+        this.tagFormate()
       },
-      getDiscovers (page) {
-        API.getDiscovers(page)
-        .then(res => {
-          if (res.data.current_page === res.data.last_page) {
-            this.morebtn = false
-          }
-          this.discovers.push(...res.data.data)
-          this.refreshPage()
+      async getCategories () {
+        let res = await API.getCategories()
+        this.categories.push(...res.data)
+      },
+      async getCategory (id) {
+        let res = await API.getCategory(id)
+        console.log(res)
+      },
+      tagFormate(){
+        this.discovers.forEach( item =>{
+          this.tags[item.tag.id] = item.tag.name
         })
-      },
-      getCategories () {
-        API.getCategories()
-          .then(res => {
-            this.categories.push(...res.data)
-          })
-      },
-      getCategoriesId (id) {
-        API.getCategoriesId(id)
-          .then(res => {
-            console.log(res)
-          })
-      },
-      // 加载更多
-      loadMore () {
-        this.getDiscovers(this.page)
       },
       // 更新分页
       refreshPage () {
-        this.page += 1
+        this.page++
       }
     }
   }
@@ -104,10 +107,9 @@
 <style scope lang="less">
   .find{
     height:100%;
-    box-size:border-box;
     width:100%;
     .main{
-      margin-top:108px;
+      margin-top:20px;
       width:100%;
       .cart{
         width:100%;
@@ -192,13 +194,10 @@
 
     }
   }
-  .load-more {
+  .is-bottom {
     text-align: center;
-    border: 1px solid #999;
-    border-radius: 5px;
     margin: 15px 0;
     padding: 15px;
     color: #999;
-    cursor: pointer;
   }
 </style>

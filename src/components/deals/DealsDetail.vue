@@ -10,10 +10,12 @@
         <h6>{{deal.description}}</h6>
       </div>
       <div class="map">
-        <v-map style="height: 100%" :zoom="zoom" :center="center">
-          <v-tilelayer :url="url" :attribution="attribution"></v-tilelayer>
-          <v-marker :lat-lng="marker"></v-marker>
-        </v-map>
+        <div class="inner">      
+          <v-map style="height: 100%" :zoom="zoom" :center="center">
+            <v-tilelayer :url="url" :attribution="attribution"></v-tilelayer>
+            <v-marker :lat-lng="marker"></v-marker>
+          </v-map>
+        </div>
       </div>
     </div>
     <foot></foot>
@@ -90,9 +92,18 @@
         }
       }
       .map {
-        width:50%;
-        height: 400px;
         margin: 80px auto 60px;
+        position: relative;
+        width: 52%;
+        height: 0;
+        padding-bottom: 39%;
+        .inner{
+          width:100%;
+          height: 100%;
+          max-height: 600px;
+          background: red;
+          position: absolute;
+        }
       }
     }
   }

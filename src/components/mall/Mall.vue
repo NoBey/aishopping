@@ -49,13 +49,12 @@
       this.getShops(this.page)
     },
     mounted (){
-      window.onscroll = async() => {
+      window.onscroll = () => {
         // console.log(bottomHeight())
         if( bottomHeight() < 120 ){
           if( !this.one ) return
           this.one = false
-          console.log(2)
-          await this.getShops(this.page)
+          this.getShops(this.page)
         }
       }
     },
@@ -64,7 +63,6 @@
         this.$router.push({name: 'MallDetail', query: {id: id}})
       },
       async getShops (page) {
-        if( this.isBottom == true ) return
         let res = await API.getShops(page)
         console.log(res)
         this.shops.push(...res.data.data)

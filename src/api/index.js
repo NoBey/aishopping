@@ -16,8 +16,6 @@ request.interceptors.response.use((response) => {
 })
 
 export default {
-  host:'http://ec2-52-18-155-175.eu-west-1.compute.amazonaws.com/',
-  // host: Util.host ,
   getBrands () {
     return request.get('brands')
   },
@@ -45,11 +43,11 @@ export default {
   getItineraries (page) {
     return request.get('itineraries?page=' + page)
   },
-  getCategories () {
-    return request.get('categories')
-  },
-  getCategory (page) {
+  getCategories (page) {
     return request.get('categories?page=' + page)
+  },
+  getCategory (id) {
+    return request.get('categories/' + id)
   },
   getCarousels () {
     return request.get('carousels')

@@ -1,12 +1,7 @@
 <template>
   <div class="finddetail">
     <navigation></navigation>
-    <div class="notice">
-      <div class="notice-content">
-        <h4>独家折扣</h4>
-        <p>下载爱shopping APP，享受妒忌折扣信息，提前退税，扫码积分换取好礼，更有优惠，路线信息请下载爱shopping APP。</p>
-      </div>
-    </div>
+    <notice></notice>
     <div class="cart">
       <h4>
         <span>所有发现</span>
@@ -44,6 +39,7 @@
 <script>
   import Navigation from '../layout/Navigation'
   import Foot from '../layout/Foot'
+  import Notice from '../layout/Notice'
   import API from '@/api'
 
   export default {
@@ -56,7 +52,8 @@
     },
     components: {
       Navigation,
-      Foot
+      Foot,
+      Notice
     },
     created () {
       this.getDiscover(this.id)
@@ -94,26 +91,6 @@
     height:100%;
     box-sizing:border-box;
     width:100%;
-    .notice{
-      margin-top:108px;
-      width:100%;
-      background:#F8786B;
-      .notice-content{
-        width:80%;
-        margin:0 auto;
-        color:#fff;
-        padding-bottom: 1rem;
-        h4{
-          font-size:1.05rem;
-          font-weight: 500;
-          padding-top:1.3rem;
-          margin-bottom:1.1rem;
-        }
-        p{
-          font-size:.9rem;
-        }
-      }
-    }
     .cart{
       width:100%;
       h4{
@@ -145,8 +122,6 @@
           font-size: 1rem;
           position: relative;
           .img-wrapper{
-            width:100%;
-            height:270px;
             margin-bottom:15px;
           }
           h6 {
@@ -163,7 +138,7 @@
         }
       }
       .content {
-        width:80%;
+        width:70%;
         margin: 2rem auto;
         p {
           line-height: 1.4rem;

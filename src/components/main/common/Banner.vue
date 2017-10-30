@@ -1,7 +1,7 @@
 <template>
   <div class="banner-index">
     <swiper :options="swiperOption">
-      <swiper-slide v-for="(slide,index) in swiperSlides" :key="index">
+      <swiper-slide v-if="slide.enable" v-for="(slide,index) in swiperSlides" :key="index">
         <a :href="slide.link">
           <!-- <img :src="'http://ec2-52-18-155-175.eu-west-1.compute.amazonaws.com/' + slide.image" :alt="slide.name"> -->
           <img :src="slide.image" :alt="slide.name">

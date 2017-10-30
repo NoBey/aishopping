@@ -56,9 +56,11 @@
           </div>
         </div>
         <div class="col-sm-4 ">
-          <div class="item header-f">
-            发现
-          </div>
+          <router-link to="/find">
+            <div class="item header-f">
+              发现
+            </div>
+          </router-link>
           <div class="item-r" v-if="discovers[3]">
             <img :src="discovers[3].thumbnail" class="bg">
             <div class="item-content">
@@ -81,9 +83,11 @@
     <div class="find" v-if="this.itineraries.length > 3">
       <div class="row">
         <div class="col-sm-4 ">
-          <div class="item header-f">
-            线路
-          </div>
+          <router-link to="/find">
+            <div class="item header-f">
+              线路
+            </div>
+          </router-link>
           <div class="item-r">
             <img :src="itineraries[0].image" class="bg">
             <div class="item-content">
@@ -155,9 +159,11 @@
     <div class="find" v-if="this.brands.length > 3">
       <div class="row">
         <div class="col-sm-4 ">
-          <div class="item header-f">
-            品牌
-          </div>
+          <router-link to="/brands">
+            <div class="item header-f">
+              品牌
+            </div>
+          </router-link>
           <div class="item-r">
             <!-- <img :src="brands[0].logo" class="bg"> -->
             <img :src="brands[0].logo" class="bg">
@@ -279,9 +285,11 @@
           </div>
         </div>
         <div class="col-sm-4 ">
-          <div class="item header-f">
-            福利
-          </div>
+          <router-link to="/deals">
+            <div class="item header-f">
+              福利
+            </div>
+          </router-link>
           <div class="item-r" v-if="deals[3]">
             <img :src="deals[3].image" class="bg">
             <div class="item-content">
@@ -304,9 +312,11 @@
     <div class="find" v-if="this.shops.length > 3">
       <div class="row">
         <div class="col-sm-4 ">
-          <div class="item header-f">
-            商城
-          </div>
+          <router-link to="/shops">
+            <div class="item header-f">
+              商城
+            </div>
+          </router-link>
           <div class="item-r">
             <img :src="shops[0].image" class="bg">
             <div class="item-content">
@@ -429,7 +439,7 @@ export default {
       this.shops = res.data
     },
     twitter(name, type, id){
-      window.open('http://twitter.com/home/?status=' + encodeURIComponent(name) + ' ' + encodeURIComponent(API.host + type + '/detail' + id) )
+      window.open('http://twitter.com/home/?status=' + encodeURIComponent(name) + ' ' + encodeURIComponent(location.host + type + '/detail?id=' + id) )
     },
     toFDetail (id) {
       this.$router.push({name: 'FindDetail', query: {id: id}})
