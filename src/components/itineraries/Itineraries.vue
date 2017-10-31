@@ -19,6 +19,7 @@
         </div>
       </div>
     </div>
+    <p v-loading="loading"></p>
     <p v-if="isBottom" class="is-bottom">到底了</p>
     <foot></foot>
   </div>
@@ -34,6 +35,7 @@
   export default {
     data () {
       return {
+        loading: false,
         itineraries: [],
         page: 1,
         isBottom: false,
@@ -55,7 +57,7 @@
         if( bottomHeight() < 120 ){
           if( !this.one ) return
           this.one = false
-          console.log(2)
+          this.loading = true
           await this.getItineraries(this.page)
         }
       }
@@ -69,6 +71,7 @@
         let res = await API.getItineraries(page)
         console.log(res)
         this.itineraries.push(...res.data.data)
+        this.loading = false
         if( res.data.current_page == res.data.last_page) {
           this.isBottom = true
           //清除滚动事件监听
@@ -157,7 +160,7 @@
             }
           }
           &:hover{
-            .itineraries-content{
+            .itinerary-content{
               display: block;
               background: rgba(242,177,171,.8);
             }

@@ -43,6 +43,9 @@ export default {
   getItineraries (page) {
     return request.get('itineraries?page=' + page)
   },
+  getItinerary (id) {
+    return request.get('itineraries/' + id)
+  },
   getCategories (page) {
     return request.get('categories?page=' + page)
   },

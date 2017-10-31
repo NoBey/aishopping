@@ -14,7 +14,6 @@
                 :value="category">
               </el-option>
             </el-select>
-            <el-button type="danger">OK</el-button>
           </div>
         </div>
         <div class="row brands-top">

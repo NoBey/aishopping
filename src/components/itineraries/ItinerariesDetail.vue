@@ -1,51 +1,63 @@
 <template>
   <div class="dealdetail">
     <navigation></navigation>
-    <div class="notice">
-      <div class="notice-content">
-        <h4>独家折扣</h4>
-        <p>下载爱shopping APP，享受妒忌折扣信息，提前退税，扫码积分换取好礼，更有优惠，路线信息请下载爱shopping APP。</p>
+    <notice></notice>
+    <div class="main">
+      <div class="itinerary-item">
+        <img :src="itinerary.image">
+        <h4>{{itinerary.name}}</h4>
+        <p><span>发表时间：{{itinerary.created_at}}</span> <span>更新时间：{{itinerary.updated_at}}</span><span>分享数：{{itinerary.enable}}</span></p>
+        <h6>{{itinerary.description}}</h6>
+      </div>
+      <div class="content" v-html="itinerary.content">
+      </div>
+      <div class="map">
+        <div class="inner">      
+          <v-map style="height: 100%" :zoom="zoom" :center="center">
+            <v-tilelayer :url="url" :attribution="attribution"></v-tilelayer>
+            <v-marker :lat-lng="marker"></v-marker>
+          </v-map>
+        </div>
       </div>
     </div>
-    <div class="main">
-      <div class="navigo-item">
-        <img :src="navigo.image" width="100%" height="230">
-        <h4>{{navigo.name}}</h4>
-        <h6>{{navigo.description}}</h6>
-        <p><span>发表时间：{{navigo.created_at}}</span> <span>更新时间：{{navigo.updated_at}}</span><span>分享数：{{navigo.enable}}</span></p>
-        </div>
-        <div class="content" v-html="navigo.content">
-        </div>
-      </div>
     <foot></foot>
   </div>
 </template>
 <script>
   import API from '@/api'
   import Navigation from '../layout/Navigation'
+  import Notice from '../layout/Notice'
   import Foot from '../layout/Foot'
+  import Vue2Leaflet from 'vue2-leaflet'
 
   export default {
     data () {
       return {
         id: this.$route.query.id,
-        navigo: {}
+        itinerary: {},
+        zoom:13,
+        center: L.latLng(47.413220, -1.219482),
+        url:'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+        attribution:'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        marker: L.latLng(47.413220, -1.219482),
       }
     },
     components: {
       Navigation,
-      Foot
+      Notice,
+      Foot,
+      'v-map': Vue2Leaflet.Map,
+      'v-tilelayer' :Vue2Leaflet.TileLayer,
+      'v-marker': Vue2Leaflet.Marker
     },
     created () {
-      this.getNavigo(this.id)
+      this.getItinerary(this.id)
     },
     methods: {
-      getNavigo (id) {
-        API.getNavigo(id)
-          .then(res => {
-            console.log(res)
-            this.navigo = res.data
-          })
+      async getItinerary(){
+        let res = await API.getItinerary(this.id)
+        console.log('id'+this.id,res.data)
+        this.itinerary = res.data        
       }
     }
   }
@@ -53,65 +65,41 @@
 <style scope lang="less">
   .dealdetail{
     width:100%;
-    .notice{
-      margin-top: 108px;
-      width:100%;
-      background:#F8786B;
-      .notice-content{
-        width:80%;
-        margin:0 auto;
-        color:#fff;
-        padding-bottom: 1rem;
-        h4{
-          font-size:1.05rem;
-          font-weight: 500;
-          padding-top:1.3rem;
-          margin-bottom:1.1rem;
-        }
-        p{
-          font-size:.9rem;
-        }
-      }
-    }
     .main{
       width:100%;
       margin-top:15px;
-      .navigo-item{
+      .itinerary-item{
         width:80%;
         margin:0 auto;
         text-align: center;
-        h4{
-          padding:15px 0;
+        img{
+          width: 60%;
+          margin: 30px 0;
         }
-      }
-      .cart{
-        width:100%;
-        .author {
-          width: 80%;
-          margin: 2rem auto;
-          color: #333;
-          font-size: 1rem;
-          position: relative;
-          h6 {
-            font-weight: 200;
-          }
-          p {
-            font-size: .8rem;
-            color: #ccc;
-            span {
-              display: inline-block;
-              margin-right: 2rem;
-            }
-          }
+        h4{
+          padding:60px 0 15px;
+        }
+        p{
+          // color: #b74f84;
         }
       }
       .content {
         width:80%;
-        margin: 2rem auto;
-        p {
-          line-height: 1.4rem;
-          text-indent: 2rem;
-          word-spacing: .3rem;
+        margin:0 auto;
+        text-align: center;
+      }
+      .map {
+        margin: 80px auto 60px;
+        position: relative;
+        width: 52%;
+        height: 0;
+        padding-bottom: 39%;
+        .inner{
+          width:100%;
+          height: 100%;
+          max-height: 600px;
+          background: red;
+          position: absolute;
         }
       }
     }

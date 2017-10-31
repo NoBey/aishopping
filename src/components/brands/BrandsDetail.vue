@@ -6,7 +6,24 @@
       <div class="brand-item">
         <img :src="brand.logo">
         <h4>{{brand.name}}</h4>
-        <h6>{{brand.description}}</h6>
+        <h6>
+          <span v-for="item in brand.categories" :key="item.id">{{item.name}}</span>
+        </h6>
+        <p>{{brand.description}}</p>
+      </div>
+      <div class="swiper-box">
+        <swiper :options="swiperOption">
+          <swiper-slide v-for="(item,index) in 9" :key="index">
+            <!-- <a :href="item"> -->
+              <div class="img-box">目前未登记产品
+                <!-- <img :src="slide.image" :alt="slide.name"> -->
+              </div>
+            <!-- </a> -->
+          </swiper-slide>
+          <div class="swiper-pagination" slot="pagination"></div>
+          <div class="swiper-button-prev" slot="button-prev"></div>
+          <div class="swiper-button-next" slot="button-next"></div>
+        </swiper>
       </div>
       <div class="map">
         <div class="inner">      
@@ -37,6 +54,19 @@
         url:'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
         attribution:'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
         marker: L.latLng(47.413220, -1.219482),
+          swiperOption: {
+          autoplay: 3500,
+          setWrapperSize :true,
+          prevButton: '.swiper-button-prev',
+          nextButton: '.swiper-button-next',
+          pagination : '.swiper-pagination',
+          paginationClickable :true,
+          observeParents:true,
+          autoplayDisableOnInteraction:false,
+          slidesPerView: 3,
+          spaceBetween: 30,
+        },
+        swiperSlides: []
       }
     },
     components: {
@@ -77,8 +107,15 @@
         h4{
           padding:60px 0 15px;
         }
+        h6{
+          margin-bottom: 20px;
+          span{
+            margin-right: 20px;
+          }
+        }
         p{
-          color: #b74f84;
+          width: 90%;
+          margin: 0 auto;
         }
       }
       .map {
@@ -96,5 +133,16 @@
         }
       }
     }
+  }
+  .swiper-box{
+    width: 60%;
+    margin: 40px auto;
+  }
+  .img-box{
+    // width:80%;
+    height:300px;
+    line-height: 300px;
+    text-align: center;
+    border: 1px solid #ddd;
   }
 </style>

@@ -6,7 +6,7 @@
       <div class="cart">
         <h4>
           <span>所有发现</span>
-          <span v-for="tag in tags" :key="tag" @click="discoversByTag(tag)">{{tag}}</span>
+          <el-tag type="danger" v-for="item in categories" :key="item.id" @click="discoversByTag(item.id)">{{item.name}}</el-tag>
         </h4>
       </div>
       <div  class="content">
@@ -14,19 +14,22 @@
           <div class="row">
             <div class="col-sm-4" v-for="discover in discovers" :key="discover.id" @click="toDetail(discover.id)">
               <div class="img_wrapper">
-                <img :src="discovers.thumbnail" alt="">
+                <img :src="discover.thumbnail" alt="">
               </div>
               <div class="item-content">
-                <h5>{{ discover.name }}</h5>
-                <h3>
-                  {{ discover.description }}
-                </h3>
+                <el-card class="box-card">
+                  <h5>{{ discover.tag.name }}</h5>
+                  <h3>
+                    {{ discover.name }}
+                  </h3> 
+                </el-card>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <p v-loading="loading"></p>
     <p v-if="isBottom" class="is-bottom">到底了</p>
     <foot></foot>
   </div>
@@ -36,13 +39,14 @@
   import Navigation from '../layout/Navigation'
   import Notice from '../layout/Notice'
   import Foot from '../layout/Foot'
+  import bottomHeight from '@/util/bottomHeight'
 
   export default {
     data () {
       return {
-        discoversShow:[],
+        loading: false,
         discovers: [],
-        tags: {},
+        categories: [],
         page: 1,
         isBottom: false,
         one:false
@@ -55,6 +59,7 @@
     },
     created () {
       this.getDiscovers(this.page)
+      this.getCategories()
     },
     mounted (){
       window.onscroll = () => {
@@ -62,6 +67,7 @@
         if( bottomHeight() < 120 ){
           if( !this.one ) return
           this.one = false
+          this.loading = true
           this.getDiscovers(this.page)
         }
       }
@@ -74,32 +80,27 @@
         let res = await API.getDiscovers(page)
         console.log(res)
         this.discovers.push(...res.data.data)
+        this.loading = false
         if( res.data.current_page == res.data.last_page) {
           this.isBottom = true
           //清除滚动事件监听
           window.onscroll = null
+          return
         }
         this.refreshPage()
-        //当此加载事件完毕
+        //当此加载完毕
         this.one = true
-        this.tagFormate()
       },
       async getCategories () {
         let res = await API.getCategories()
-        this.categories.push(...res.data)
-      },
-      async getCategory (id) {
-        let res = await API.getCategory(id)
-        console.log(res)
-      },
-      tagFormate(){
-        this.discovers.forEach( item =>{
-          this.tags[item.tag.id] = item.tag.name
-        })
+        this.categories = res.data
       },
       // 更新分页
       refreshPage () {
         this.page++
+      },
+      async discoversByTag(id){
+
       }
     }
   }
@@ -119,10 +120,9 @@
           color:#333;
           font-size:1rem;
           span{
-            display: inline-block;
-            cursor:pointer;
-            padding:5px 0;
-            margin-right:3.5rem;
+            margin-right:1.5rem;
+            margin-top: 10px;
+            cursor: pointer;
             &:hover{
               color:#F8786B;
             }
@@ -143,6 +143,7 @@
               width:100%;
               height: 460px;
               overflow: hidden;
+              border: 1px solid #eee;
               img{
                 width:100%;
                 height: 460px;
@@ -152,46 +153,39 @@
             }
             & .item-content{
               position:absolute;
-              bottom:1rem;
-              left:50%;
+              bottom:0rem;
+              width: 86%;
+              left: 7%;
               padding:1.9rem 1rem;
-              width:260px;
-              transform: translateX(-50%);
-              background:#fff;
-              border:1px solid transparent;
               text-align: center;
               h5{
                 font-size:.9rem;
                 letter-spacing:.5rem;
+                color: #aaa;
+                padding-bottom: 20px;
               }
               h3{
                 font-size:1.3rem;
+                height: 3.6rem;
                 line-height: 1.8rem;
                 letter-spacing: .01rem;
                 font-family:"STKaiti,KaiTi";
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                overflow: hidden;
               }
 
             }
             &:hover{
               img{
                 transform: scale(1.1);
-                width:310px;
-                height: 460px;
                 overflow: hidden;
-              }
-              .item-content{
-                border-color:#000;
-
-              }
-              h3{
-                text-decoration: underline #FFA3A3;
               }
             }
           }
         }
-
       }
-
     }
   }
   .is-bottom {

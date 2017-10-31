@@ -22,7 +22,7 @@ export default {
 <style scoped>
 .notice{
   margin-top: 108px;
-  background: #FBBAB2;
+  background: #F8786B;
 }
 .notice p{
   text-align: center;

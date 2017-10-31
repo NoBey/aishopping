@@ -5,7 +5,12 @@
     <div class="cart">
       <h4>
         <span>所有发现</span>
-        <span v-for="item in categories" @click="toCate(item.id)">{{item.name}}</span>
+        <el-tag type="danger" 
+          v-for="item in categories" 
+          :key="item.id" 
+          @click="discoversByTag(item.id)">
+          {{item.name}}
+        </el-tag>
       </h4>
     </div>
     <div class="main">
@@ -14,8 +19,9 @@
             <div class="img-wrapper">
               <img :src="discover.thumbnail" alt="" width="100%" height="100%">
             </div>
-            <h4>{{discover.name}}</h4>
-            <h6>{{discover.description}}</h6>
+            <h3>{{discover.name}}</h3>
+            <h4>{{discover.description}}</h4>
+            <h5>{{discover.tag.name}}</h5>
             <p><span>发表时间：{{discover.created_at}}</span> <span>更新时间：{{discover.updated_at}}</span><span>分享数：{{discover.enable}}</span></p>
           </div>
           <div class="content" v-html="discover.content">
@@ -27,8 +33,13 @@
             </div>
             <div class="message">
               <h5>留言</h5>
-              <textarea name="message" id="message" cols="60" rows="5"></textarea>
-              <button class="btn btn-lg">确认</button>
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 6 }"
+                placeholder="请输入内容"
+                v-model="textarea">
+              </el-input>
+              <el-button type="danger" plain>确认</el-button>
             </div>
           </div>
         </div>
@@ -47,7 +58,8 @@
       return {
         id: this.$route.query.id,
         discover: {},
-        categories: []
+        categories: [],
+        textarea:''
       }
     },
     components: {
@@ -60,28 +72,17 @@
       this.getCategories()
     },
     methods: {
-      getDiscover (id) {
-        API.getDiscover(id)
-        .then(res => {
-          console.log(res.data)
-          this.discover = res.data
-        })
+      async getDiscover (id) {
+        let res = await API.getDiscover(id)
+        this.discover = res.data
+        console.log(res)
       },
-      toCate (id) {
-        this.getCategoriesId(id)
+      discoversByTag (id) {
+        this.$router.push('/find?tag=' + id)
       },
-      getCategories () {
-        API.getCategories()
-          .then(res => {
-            console.log(res)
-            this.categories.push(...res.data)
-          })
-      },
-      getCategoriesId (id) {
-        API.getCategoriesId(id)
-          .then(res => {
-            console.log(res)
-          })
+      async getCategories () {
+        let res = await API.getCategories()
+        this.categories = res.data
       }
     }
   }
@@ -99,10 +100,9 @@
         color:#333;
         font-size:1rem;
         span{
-          display: inline-block;
-          cursor:pointer;
-          padding:5px 0;
-          margin-right:3.5rem;
+          margin-right:1.5rem;
+          margin-top: 10px;
+          cursor: pointer;
           &:hover{
             color:#F8786B;
           }
@@ -123,9 +123,14 @@
           position: relative;
           .img-wrapper{
             margin-bottom:15px;
+            width: 60%;
+            margin: 0 auto;
           }
-          h6 {
-            font-weight: 200;
+          h4 {
+            padding-top: 1rem;
+          }
+          h5 {
+            padding: 1rem 0;
           }
           p {
             font-size: .8rem;
@@ -176,10 +181,7 @@
           }
           button{
             float: right;
-            padding:5px 15px;
-            border:1px solid #F8786B;
-            margin:15px 0 15px 0;
-            background: #ffffff;
+            margin: 15px 0;
           }
         }
       }

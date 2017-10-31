@@ -88,7 +88,7 @@
           padding:60px 0 15px;
         }
         p{
-          color: #b74f84;
+          // color: #b74f84;
         }
       }
       .map {
