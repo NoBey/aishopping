@@ -4,7 +4,7 @@
     <notice></notice>
     <div class="main">
       <div class="main_content">
-        <h3>商城</h3>
+        <h3>ALL PRODUCTS</h3>
       </div>
       <div class="items">
         <div class="row">
@@ -97,8 +97,9 @@
         h3{
           color:#FDAF7E;
           font-weight: 700;
-          font-size: 3rem;
+          font-size: 2.6rem;
           padding:3rem;
+          text-align:center;
         }
       }
       .items {
