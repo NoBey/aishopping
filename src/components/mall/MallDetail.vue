@@ -1,17 +1,18 @@
 <template>
   <div class="detail">
     <navigation></navigation>
+    <notice></notice>
     <div class="main">
       <div class="main_content">
         <p><router-link  :to="{name: 'Index'}">Accueil</router-link>/
           <router-link :to="{name: 'Mall'}">商城</router-link>/
           TAPIS</p>
       </div>
-      <div class="row items">
+      <div v-if="shop.name" class="row items">
         <div class="col-sm-6">
           <img :src="mainsrc" alt="" width="100%" height="330">
           <ul>
-            <li class="item" v-for="gallery in shop.galleries" >
+            <li class="item" v-for="(gallery,index) in shop.galleries" :key="index">
               <img :src="gallery.image" alt="" width="50" height="50" @click="toggleSrc(gallery.image)">
             </li>
           </ul>
@@ -40,6 +41,7 @@
   import API from '@/api'
   import Navigation from '../layout/Navigation'
   import Foot from '../layout/Foot'
+  import Notice from '../layout/Notice'
 
   export default {
     data () {
@@ -51,7 +53,8 @@
     },
     components: {
       Navigation,
-      Foot
+      Foot,
+      Notice
     },
     created () {
       this.getShop(this.id)
@@ -79,13 +82,12 @@
     height:100%;
     width:100%;
     .main{
-      margin-top:108px;
+      margin-top: 0;
       width:100%;
       background: #2d2d2d;
       .main_content{
         width:80%;
         margin:0 auto;
-
         p{
           color:#ccc;
           padding:3rem 0;

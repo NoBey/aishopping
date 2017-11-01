@@ -1,8 +1,8 @@
 <template>
   <div class="itineraries">
     <navigation></navigation>
+    <notice></notice>
     <div class="main">
-      <notice></notice>
       <div class="cart" >
         <div class="row cart-content">
           <div class="col-sm-4" v-for="item in itineraries" :key="item.id" @click="toDetail(item.id)">

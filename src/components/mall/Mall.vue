@@ -90,7 +90,6 @@
     height:100%;
     width:100%;
     .main{
-      margin-top:108px;
       width:100%;
       .main_content{
         width:80%;

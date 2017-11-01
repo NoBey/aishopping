@@ -37,8 +37,8 @@ export default {
   getShops () {
     return request.get('products')
   },
-  getShop (page) {
-    return request.get('products?page=' + page)
+  getShop (id) {
+    return request.get('products/' + id)
   },
   getItineraries (page) {
     return request.get('itineraries?page=' + page)
