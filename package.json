@@ -11,6 +11,7 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "animate.css": "^3.5.2",
     "axios": "^0.16.2",
     "bootstrap": "^4.0.0-alpha.6",
     "element-ui": "^2.0.1",
@@ -19,6 +20,7 @@
     "qs": "^6.4.0",
     "vue": "^2.5.2",
     "vue-awesome-swiper": "^2.6.7",
+    "vue-fullpage": "^2.0.5",
     "vue-js-modal": "^1.1.2",
     "vue-loader": "^12.2.1",
     "vue-picture-preview": "0.0.1",

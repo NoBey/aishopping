@@ -6,21 +6,24 @@
       <div class="main_content">
         <h3>ALL PRODUCTS</h3>
       </div>
-      <div class="items">
-        <div class="row">
-          <div class="col-sm-3" v-for="shop in shops" :key="shop.id" @click="toDetail(shop.id)">
-            <div class="img_wrapper">
-              <img :src="shop.image" alt="" width="250" height="250">
-              <div class="descript">{{shop.brand.name}}</div>
-            </div>
-            <h3>{{shop.name}} </h3>
-            <span class="price"> €{{shop.price}} </span>
-          </div>
-        </div>
+      <h4>商品</h4>
+      <div class="swiper-box">
+        <swiper :options="swiperOption">
+          <swiper-slide  v-for="shop in shops" :key="shop.id">
+            <router-link :to="{name: 'MallDetail', query: {id: shop.id}}">
+              <div class="img-box" >
+                <img :src="shop.image" height="70%" width="100%">
+                <div class="descript">{{shop.brand.name}}</div>
+                <h6>{{shop.name}} </h6>
+                <span class="price"> €{{shop.price}} </span>
+              </div>
+            </router-link>
+          </swiper-slide>
+          <div class="swiper-button-prev" slot="button-prev"></div>
+          <div class="swiper-button-next" slot="button-next"></div>
+        </swiper>
       </div>
     </div>
-    <p v-loading="loading"></p>
-    <p v-if="isBottom" class="is-bottom">到底了</p>
     <foot></foot>
   </div>
 </template>
@@ -34,12 +37,20 @@
   export default {
     data () {
       return {
-        loading: false,
         shops: [],
         page: 1,
-        isBottom: false,
-        //保证window.onscroll在bottomHeight() < 120时，不会重复调用this.getItineraries(this.page)
-        one:false
+        swiperOption: {
+          setWrapperSize :true,
+          prevButton: '.swiper-button-prev',
+          nextButton: '.swiper-button-next',
+          pagination : '.swiper-pagination',
+          paginationClickable :true,
+          observeParents:true,
+          autoplayDisableOnInteraction:false,
+          slidesPerView: 4,
+          spaceBetween: 30,
+        },
+        swiperSlides: []
       }
     },
     components: {
@@ -50,37 +61,11 @@
     created () {
       this.getShops(this.page)
     },
-    mounted (){
-      window.onscroll = () => {
-        // console.log(bottomHeight())
-        if( bottomHeight() < 120 ){
-          if( !this.one ) return
-          this.one = false
-          this.loading = true
-          this.getShops(this.page)
-        }
-      }
-    },
     methods: {
-      toDetail (id) {
-        this.$router.push({name: 'MallDetail', query: {id: id}})
-      },
       async getShops (page) {
         let res = await API.getShops(page)
         console.log(res)
         this.shops.push(...res.data.data)
-        this.loading = false
-        if( res.data.current_page == res.data.last_page) {
-          this.isBottom = true
-          //清除滚动事件监听
-          window.onscroll = null
-        }
-        this.refreshPage()
-        //当此加载事件完毕
-        this.one = true
-      },
-      refreshPage () {
-        this.page ++
       }
     }
   }
@@ -102,6 +87,9 @@
           text-align:center;
         }
       }
+      h4{
+        padding-left: 10%;
+      }
       .items {
         padding:0;
         list-style: none;
@@ -109,56 +97,26 @@
         margin:0 auto;
         overflow: hidden;
         margin-bottom: 2rem;
-        .col-sm-3{
-          position: relative;
-          margin-bottom:2rem;
-          .img_wrapper{
-            position: relative;
-            width:250px;
-            height: 250px;
-            overflow:hidden;
-            img{
-              transition:  all .3s;
-            }
-            .descript{
-              width:100%;
-              height:50px;
-              line-height:50px;
-              background: rgba(255, 255, 255, 0.75);
-              position: absolute;
-              bottom:0;
-              text-align: center;
-              display: none;
-            }
-          }
-          &:hover{
-            .img_wrapper{
-              img {
-                transform: scale(1.1);
-              }
-              .descript{
-                display: block;
-                transition: all .3s;
-              }
-            }
-          }
-          h3{
-            color:#c9c9c9;
-            font-size: 1.2rem;
-            font-weight: 400;
-            padding-top:1rem;
-          }
-          span{
-            font-size: .8rem;
-          }
-         }
-       }
+      }
     }
   }
-  .is-bottom {
+  .swiper-box{
+    width: 80%;
+    margin: 40px auto;
+  }
+  .img-box{
+    position: relative;
+    height:400px;
     text-align: center;
-    margin: 15px 0;
-    padding: 15px;
-    color: #999;
+    border: 1px solid #eee;
+  }
+  .img-box div{
+    padding-top: 1rem;
+  }
+  .img-box h6{
+    padding-top: .6rem;
+  }
+  .img-box span{
+    padding-top: .6rem;
   }
 </style>

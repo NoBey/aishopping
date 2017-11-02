@@ -31,8 +31,12 @@ export default {
 
 <style lang="less">
 @import "../node_modules/leaflet/dist/leaflet.css";
-
-a:hover{ text-decoration:none; }
+a{
+  color: #000;
+}
+a:hover{ 
+  text-decoration:none;
+}
 /*
  *  过渡效果
  */
