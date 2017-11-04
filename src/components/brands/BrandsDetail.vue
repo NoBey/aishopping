@@ -43,6 +43,7 @@
   import Notice from '../layout/Notice'
   import Foot from '../layout/Foot'
   import Vue2Leaflet from 'vue2-leaflet'
+  import { OpenStreetMapProvider } from 'leaflet-geosearch'
 
   export default {
     data () {
@@ -85,6 +86,14 @@
         let res = await API.getBrand( id )
         console.log( 'brand', res )
         this.brand = res.data
+        const results = []
+        const querys = res.data.categories
+        const provider = new OpenStreetMapProvider()
+        for( let query of querys ){
+          let res = await provider.search({ query: query.name })
+          results.push(...res)
+        }
+        console.log('results',results) 
       }
     }
   }
