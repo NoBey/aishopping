@@ -19,8 +19,8 @@
           </v-map>
         </div>
       </div>
+      <foot></foot>
     </div>
-    <foot></foot>
   </div>
 </template>
 <script>

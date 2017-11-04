@@ -18,10 +18,10 @@
           </div>
         </div>
       </div>
+      <p v-loading="loading"></p>
+      <p v-if="isBottom" class="is-bottom">到底了</p>
+      <foot></foot>
     </div>
-    <p v-loading="loading"></p>
-    <p v-if="isBottom" class="is-bottom">到底了</p>
-    <foot></foot>
   </div>
 </template>
 <script>

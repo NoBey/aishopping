@@ -3,19 +3,22 @@
     <navigation></navigation>
     <notice></notice>
     <div class="main">
-      <div class="parallax">
-        <div id="group6" :style="'background-image:url('+item.image+');'" class="parallax__group" v-for="item in itineraries" :key="item.id" @click="toDetail(item.id)">
-          <div class="parallax__layer parallax__layer--fore">
-            <div class="title"><h3 style="color:#fff;">{{item.name}}</h3></div>
-          </div>
-          <div class="parallax__layer parallax__layer--base">
-            <div class="title"><p style="color:yellow">{{item.description}}</p></div>
-          </div>
+      <div class="img" :style="'background-image:url('+item.image+');'" 
+        v-for="item in itineraries" :key="item.id">
+        <div class="in">
+          <h1>{{item.name}}</h1>
+          <h3>{{item.description}}</h3>
+          <router-link :to="{ name: 'ItinerariesDetail', query: {id: item.id} }">
+            <div class="detail">
+              <div>详细信息</div>
+              <img :src="imgUrl" alt="">
+            </div>
+          </router-link>
         </div>
-        <p v-loading="loading"></p>
-        <p v-if="isBottom" class="is-bottom">到底了</p>
-        <foot></foot>
       </div>
+      <p v-loading="loading"></p>
+      <p v-if="isBottom" class="is-bottom">到底了</p>
+      <foot></foot>
     </div>
   </div>
 </template>
@@ -35,7 +38,8 @@ export default {
       page: 1,
       isBottom: false,
       //保证window.onscroll在bottomHeight() < 120时，不会重复调用this.getItineraries(this.page)
-      one: false
+      one: false,
+      imgUrl:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABsUlEQVRYR+1WwVHDMBC0KoAS6ICkA1MBdEDSAekAKoAOCBVAB6QDnAowHZAKzK7nlJHkk63YMf5YMxpHtnS7t9KtYrKJm5kYP5sJzApMr0BVVVeohHv0N2NM+R9V4WFi8AnQHP0X/QYkijFJAG+B+MS8RC8NXhDwWkBJYjmWEsAi6LeAE/KHBMhoh34hJEiISpDM2ZqAM3PisR2ofH0IxyahgBOWShfHKsCkFV6+OikXmLA8hwSI/Y44d06sNWJvOfbKUCGxxcT1EBKIyaSYnG1H8AYB2Y4HPJ+dBb1JKOBPSOjRTUg1IiykPPQG2xoLu1RBjDAR+oyrRB0i6oQKCU+6NgLKVqrgrQRkOz7wvI3tn0ZCAd8jc1t6jSWtd4GUzw6rrFExQF0+EXDX5Thlj563eUrnZaSQUC07sNgk8M4tsFkKiRJj65YeCblcvvCdVstGl1ukWHqnAg6J0LJJyBpV02ITL7VkAnIotXuDn3x/TwRP3gL3wEHuHGNmrLXkUrWLT1LA2Y4Vfrv3Bj+dDN5LgQiJDQ7cS0SV1te9FAgOZjbkX9QgAn0yDtfMBGYF/gAsjbYk2kLzKgAAAABJRU5ErkJggg=='
     };
   },
   components: {
@@ -58,9 +62,6 @@ export default {
     };
   },
   methods: {
-    toDetail(id) {
-      this.$router.push({ name: "ItinerariesDetail", query: { id: id } });
-    },
     async getItineraries(page) {
       if (this.isBottom == true) return;
       let res = await API.getItineraries(page);
@@ -84,108 +85,54 @@ export default {
 };
 </script>
 
-<style scope lang="less">
+<style scope >
+html{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.main{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.img{
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-attachment:fixed;
+  background-size:cover;
+  display: table;
+  width: 100%;
+}
+.in{
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+h1{
+  color: #fff;
+  font-weight: bold;
+}
+h3{
+  color: #fff;
+  font-size: 30px;
+  padding: 40px 15%;
+}
+.detail{
+  color: #fff;
+  font-size: 22px;
+  position: relative;
+  top: 7rem;
+}
+.detail img{
+  height: 24px;
+  width: 28px;
+}
 .is-bottom {
   text-align: center;
   margin: 15px 0;
   padding: 15px;
   color: #999;
-}
-.parallax {
-  height: 500px; /* fallback for older browsers */
-  height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-perspective: 300px;
-  perspective: 300px;
-  -webkit-perspective-origin-x: 100%;
-  perspective-origin-x: 100%;
-}
-.parallax__group {
-  position: relative;
-  height: 500px; /* fallback for older browsers */
-  height: 100vh;
-  -webkit-transform-style: preserve-3d;
-  transform-style: preserve-3d;
-}
-.parallax__layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  -webkit-transform-origin-x: 100%;
-  transform-origin-x: 100%;
-}
-.parallax__layer--fore {
-  -webkit-transform: translateZ(90px) scale(0.7);
-  transform: translateZ(90px) scale(0.7);
-  z-index: 1;
-}
-
-.parallax__layer--base {
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  z-index: 4;
-}
-
-.parallax__layer--back {
-  -webkit-transform: translateZ(-300px) scale(2);
-  transform: translateZ(-300px) scale(2);
-  z-index: 3;
-}
-
-.parallax__layer--deep {
-  -webkit-transform: translateZ(-600px) scale(3);
-  transform: translateZ(-600px) scale(3);
-  z-index: 2;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-}
-
-.parallax {
-  font-size: 200%;
-}
-
-/* centre the content in the parallax layers */
-.title {
-  text-align: center;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
-
-/* style the groups
---------------------------------------------- */
-
-#group6 {
-  z-index: 2; /* slide under group 5 and 7 */
-  background-size: 100% 100%;
-}
-#group6 .parallax__layer--back {
-  // background: rgb(245, 235, 100);
-}
-
-/* misc
---------------------------------------------- */
-.demo__info {
-  position: absolute;
-  z-index: 100;
-  bottom: 1vh;
-  top: auto;
-  font-size: 80%;
-  text-align: center;
-  width: 100%;
-}
-.main{
-  position: absolute;
-  width: 100%;
-  top: 152px;
-  bottom: 10px;
 }
 </style>
